@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Archivo+Black&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="app-layout">
     <div class="boombox">
         <!-- Boombox Top Section - Handle & Speakers -->
         <div class="boombox-top">
@@ -269,41 +270,41 @@
             </div>
         </div>
 
-        <!-- Boombox Bottom - Playlist/Tape Collection -->
-        <div class="boombox-bottom">
-            <div class="tape-collection">
-                <div class="collection-header">
-                    <span class="collection-icon">📼</span>
-                    <span class="collection-title">TAPE COLLECTION</span>
-                    <span class="tape-count" id="trackCount">0 tapes</span>
-                </div>
-                
-                <div class="add-tape">
-                    <input type="text" id="urlInput" placeholder="Paste YouTube URL to record a new tape..." />
-                    <button id="btnAddTrack" class="btn-record-new">REC</button>
-                </div>
+    </div>
 
-                <div class="tape-rack" id="queue">
-                    <div class="empty-rack">
-                        <span class="empty-icon">📻</span>
-                        <p>No tapes in collection</p>
-                        <p class="hint">Add YouTube URLs to build your mixtape!</p>
-                    </div>
-                </div>
+    <!-- Tape Collection Sidebar -->
+    <aside class="tape-collection">
+        <div class="collection-header">
+            <span class="collection-icon">📼</span>
+            <span class="collection-title">TAPE COLLECTION</span>
+            <span class="tape-count" id="trackCount">0 tapes</span>
+        </div>
+        
+        <div class="add-tape">
+            <input type="text" id="urlInput" placeholder="Paste YouTube URL..." />
+            <button id="btnAddTrack" class="btn-record-new">REC</button>
+        </div>
 
-                <div class="shortcuts-panel">
-                    <div class="shortcuts-title">⌨️ SHORTCUTS</div>
-                    <div class="shortcuts-grid">
-                        <kbd>SPACE</kbd><span>Play/Pause</span>
-                        <kbd>→</kbd><span>Next Tape</span>
-                        <kbd>←</kbd><span>Prev Tape</span>
-                        <kbd>C</kbd><span>Auto Crossfade</span>
-                        <kbd>A</kbd><span>Fade to A</span>
-                        <kbd>B</kbd><span>Fade to B</span>
-                    </div>
-                </div>
+        <div class="tape-rack" id="queue">
+            <div class="empty-rack">
+                <span class="empty-icon">📻</span>
+                <p>No tapes in collection</p>
+                <p class="hint">Add YouTube URLs to build your mixtape!</p>
             </div>
         </div>
+
+        <div class="shortcuts-panel">
+            <div class="shortcuts-title">⌨️ SHORTCUTS</div>
+            <div class="shortcuts-grid">
+                <kbd>SPACE</kbd><span>Play/Pause</span>
+                <kbd>→</kbd><span>Next Tape</span>
+                <kbd>←</kbd><span>Prev Tape</span>
+                <kbd>C</kbd><span>Auto Crossfade</span>
+                <kbd>A</kbd><span>Fade to A</span>
+                <kbd>B</kbd><span>Fade to B</span>
+            </div>
+        </div>
+    </aside>
     </div>
 
     <!-- Toast notifications -->

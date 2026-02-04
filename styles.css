@@ -56,13 +56,21 @@ body {
     background: linear-gradient(135deg, var(--bg-warm) 0%, var(--bg-darker) 100%);
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 2rem;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1.5rem;
     background-image: 
         radial-gradient(circle at 20% 80%, rgba(216, 152, 80, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(139, 90, 43, 0.1) 0%, transparent 50%);
+}
+
+/* === APP LAYOUT - Side by Side === */
+.app-layout {
+    display: flex;
+    gap: 1.5rem;
+    max-width: 1450px;
+    width: 100%;
+    align-items: flex-start;
 }
 
 /* === BOOMBOX CONTAINER === */
@@ -824,14 +832,23 @@ body {
 }
 
 /* === BOOMBOX BOTTOM (Tape Collection) === */
-.boombox-bottom {
-    background: linear-gradient(180deg, var(--boombox-dark) 0%, #151515 100%);
-    padding: 1.5rem;
-    border-top: 3px solid #1a1a1a;
-}
-
+/* === TAPE COLLECTION SIDEBAR === */
 .tape-collection {
-    max-width: 100%;
+    width: 320px;
+    min-width: 320px;
+    background: linear-gradient(180deg, var(--boombox-light) 0%, var(--boombox-body) 10%, var(--boombox-dark) 100%);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+    border: 3px solid var(--boombox-edge);
+    max-height: calc(100vh - 3rem);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 1.5rem;
 }
 
 .collection-header {
@@ -912,10 +929,11 @@ body {
 
 /* === TAPE RACK (Queue) === */
 .tape-rack {
-    max-height: 200px;
+    flex: 1;
     overflow-y: auto;
     margin-bottom: 1rem;
     padding-right: 0.5rem;
+    min-height: 150px;
 }
 
 .empty-rack {
@@ -1129,6 +1147,25 @@ kbd {
 }
 
 /* === RESPONSIVE === */
+@media (max-width: 1200px) {
+    .app-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .tape-collection {
+        width: 100%;
+        max-width: 1100px;
+        min-width: auto;
+        position: static;
+        max-height: none;
+    }
+    
+    .tape-rack {
+        max-height: 200px;
+    }
+}
+
 @media (max-width: 900px) {
     body {
         padding: 1rem;
