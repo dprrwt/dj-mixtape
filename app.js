@@ -317,6 +317,11 @@ function loadTrackToDeck(deck, index) {
     if (deck === state.activeDeck) {
         els.nowPlayingText.textContent = track.title;
         els.bpmValue.textContent = track.bpm;
+        // Update cassette label
+        const cassetteTitle = document.getElementById('cassetteTitle');
+        if (cassetteTitle) {
+            cassetteTitle.textContent = track.title.length > 12 ? track.title.substring(0, 12) + '...' : track.title;
+        }
     }
     
     console.log(`📀 Loaded "${track.title}" to Deck ${deck}`);
@@ -334,6 +339,7 @@ function play() {
         state.isPlaying = true;
         els.btnPlayPause.innerHTML = '<span class="icon">⏸</span>';
         els.btnPlayPause.classList.add('playing');
+        updateCassette(true);
     }
 }
 
@@ -343,6 +349,28 @@ function pause() {
     state.isPlaying = false;
     els.btnPlayPause.innerHTML = '<span class="icon">▶</span>';
     els.btnPlayPause.classList.remove('playing');
+    updateCassette(false);
+}
+
+// === Cassette Tape Animation ===
+function updateCassette(isPlaying) {
+    const cassette = document.querySelector('.cassette');
+    const cassetteTitle = document.getElementById('cassetteTitle');
+    
+    if (cassette) {
+        if (isPlaying) {
+            cassette.classList.add('playing');
+        } else {
+            cassette.classList.remove('playing');
+        }
+    }
+    
+    // Update cassette label with current track
+    if (cassetteTitle && state.currentIndex >= 0 && state.playlist[state.currentIndex]) {
+        const title = state.playlist[state.currentIndex].title;
+        // Truncate long titles
+        cassetteTitle.textContent = title.length > 12 ? title.substring(0, 12) + '...' : title;
+    }
 }
 
 function togglePlayPause() {

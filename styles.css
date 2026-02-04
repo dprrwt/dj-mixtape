@@ -824,6 +824,173 @@ kbd {
     background: var(--accent-purple);
 }
 
+/* === Cute Cassette Tape === */
+.cassette {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.cassette-body {
+    width: 200px;
+    height: 126px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.cassette-holes {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 12px;
+}
+
+.screw-hole {
+    width: 8px;
+    height: 8px;
+    background: #f5f5dc;
+    border-radius: 50%;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.cassette-label {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    right: 15px;
+    height: 35px;
+    background: #f5f5dc;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.label-lines {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 5px,
+        rgba(200, 200, 180, 0.5) 5px,
+        rgba(200, 200, 180, 0.5) 6px
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.label-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.cassette-stripe {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    height: 35px;
+    display: flex;
+    align-items: stretch;
+}
+
+.stripe-color {
+    flex: 1;
+}
+
+.stripe-color.red { background: #e74c3c; }
+.stripe-color.blue { background: #3498db; }
+.stripe-color.yellow { background: #f1c40f; }
+.stripe-color.green { background: #2ecc71; }
+
+.tape-window {
+    width: 60px;
+    height: 100%;
+    background: #f5f5dc;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 4px;
+    gap: 8px;
+}
+
+.tape-reel {
+    width: 20px;
+    height: 20px;
+    background: #1a1a1a;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.tape-reel::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: #f5f5dc;
+    border-radius: 50%;
+}
+
+/* Tape reels spin when playing */
+.cassette.playing .tape-reel {
+    animation: reel-spin 1s linear infinite;
+}
+
+@keyframes reel-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.cassette-bottom {
+    position: absolute;
+    bottom: 8px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cassette-notch {
+    width: 20px;
+    height: 10px;
+    background: #0a0a0a;
+    border-radius: 2px;
+}
+
+.cassette-grip {
+    flex: 1;
+    height: 6px;
+    margin: 0 10px;
+    background: repeating-linear-gradient(
+        to right,
+        #333 0px,
+        #333 3px,
+        #1a1a1a 3px,
+        #1a1a1a 6px
+    );
+    border-radius: 1px;
+}
+
 /* === Responsive === */
 @media (max-width: 1200px) {
     .app {
@@ -844,5 +1011,9 @@ kbd {
         max-height: 400px;
         border-left: none;
         border-top: 1px solid var(--border-color);
+    }
+    
+    .cassette {
+        display: none;
     }
 }
