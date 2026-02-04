@@ -1,6 +1,6 @@
 # 🎧 MixTape DJ — Crossfade Edition
 
-A slick dual-deck DJ web interface with smooth crossfade transitions between YouTube tracks. Built for Sir's portfolio.
+A slick dual-deck DJ web interface with smooth crossfade transitions between YouTube tracks.
 
 ![Synthwave DJ Aesthetic](https://img.shields.io/badge/aesthetic-synthwave-ff2d75)
 ![Made with Love](https://img.shields.io/badge/made%20with-❤️-b14fff)
@@ -41,14 +41,14 @@ A slick dual-deck DJ web interface with smooth crossfade transitions between You
 
 ### Option 1: Python HTTP Server
 ```bash
-cd C:\Users\user\clawd\projects\dj-mixtape
+cd dj-mixtape
 python -m http.server 8000
 ```
 Then open: http://localhost:8000
 
 ### Option 2: Node.js (npx serve)
 ```bash
-cd C:\Users\user\clawd\projects\dj-mixtape
+cd dj-mixtape
 npx serve .
 ```
 
@@ -110,9 +110,5 @@ dj-mixtape/
 - Some videos may not play due to YouTube restrictions
 - Audio visualization is simulated (can't access actual audio data from YouTube)
 - Best experience in Chrome/Firefox
-
-## 🎉 Credits
-
-Built by Friday for Sir's portfolio collection.
 
 *"Every great DJ knows: it's all about the transition."* 🎧
