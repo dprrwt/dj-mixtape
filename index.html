@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎧 MixTape DJ — Crossfade Player</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">
+                <span class="logo-icon">💿</span>
+                MixTape DJ
+                <span class="logo-sub">Crossfade Edition</span>
+            </h1>
+            <div class="now-playing" id="nowPlaying">
+                <span class="pulse"></span>
+                <span id="nowPlayingText">Drop some tracks to get started</span>
+            </div>
+        </header>
+
+        <!-- Main DJ Interface -->
+        <main class="dj-booth">
+            <!-- Deck A -->
+            <div class="deck deck-a" id="deckA">
+                <div class="deck-header">
+                    <span class="deck-label">DECK A</span>
+                    <span class="deck-status" id="deckAStatus">IDLE</span>
+                </div>
+                <div class="turntable">
+                    <div class="platter" id="platterA">
+                        <div class="vinyl">
+                            <div class="vinyl-label">
+                                <span class="vinyl-title" id="vinylTitleA">—</span>
+                            </div>
+                            <div class="vinyl-grooves"></div>
+                        </div>
+                        <div class="tonearm" id="tonearmA"></div>
+                    </div>
+                </div>
+                <div class="deck-info">
+                    <div class="track-title" id="trackTitleA">No Track Loaded</div>
+                    <div class="track-time">
+                        <span id="timeCurrentA">0:00</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressA"></div>
+                        </div>
+                        <span id="timeTotalA">0:00</span>
+                    </div>
+                </div>
+                <div class="deck-controls">
+                    <div class="control-group">
+                        <label>SPEED</label>
+                        <input type="range" min="0.5" max="1.5" step="0.05" value="1" class="slider" id="speedA">
+                        <span id="speedValueA">1.0x</span>
+                    </div>
+                    <div class="control-group">
+                        <label>VOLUME</label>
+                        <input type="range" min="0" max="100" value="100" class="slider volume-slider" id="volumeA">
+                        <span id="volumeValueA">100%</span>
+                    </div>
+                </div>
+                <div id="playerA" class="youtube-player"></div>
+            </div>
+
+            <!-- Center Mixer -->
+            <div class="mixer">
+                <div class="visualizer-container">
+                    <canvas id="visualizer" width="300" height="150"></canvas>
+                </div>
+                
+                <div class="crossfade-section">
+                    <span class="cf-label">A</span>
+                    <div class="crossfade-container">
+                        <input type="range" min="0" max="100" value="50" class="crossfader" id="crossfader">
+                        <div class="crossfade-markers">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <span class="cf-label">B</span>
+                </div>
+
+                <div class="mixer-controls">
+                    <button class="btn btn-play" id="btnPlayPause" title="Play/Pause (Space)">
+                        <span class="icon">▶</span>
+                    </button>
+                    <button class="btn btn-skip" id="btnPrev" title="Previous (←)">⏮</button>
+                    <button class="btn btn-skip" id="btnNext" title="Next (→)">⏭</button>
+                    <button class="btn btn-crossfade" id="btnAutoCrossfade" title="Auto Crossfade (C)">
+                        <span>⟲</span> AUTO
+                    </button>
+                </div>
+
+                <div class="fade-settings">
+                    <label>Crossfade Duration</label>
+                    <div class="fade-buttons">
+                        <button class="fade-btn" data-duration="3">3s</button>
+                        <button class="fade-btn active" data-duration="5">5s</button>
+                        <button class="fade-btn" data-duration="8">8s</button>
+                        <button class="fade-btn" data-duration="12">12s</button>
+                    </div>
+                </div>
+
+                <div class="bpm-display">
+                    <div class="bpm-box">
+                        <span class="bpm-label">BPM</span>
+                        <span class="bpm-value" id="bpmValue">---</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deck B -->
+            <div class="deck deck-b" id="deckB">
+                <div class="deck-header">
+                    <span class="deck-label">DECK B</span>
+                    <span class="deck-status" id="deckBStatus">IDLE</span>
+                </div>
+                <div class="turntable">
+                    <div class="platter" id="platterB">
+                        <div class="vinyl">
+                            <div class="vinyl-label">
+                                <span class="vinyl-title" id="vinylTitleB">—</span>
+                            </div>
+                            <div class="vinyl-grooves"></div>
+                        </div>
+                        <div class="tonearm" id="tonearmB"></div>
+                    </div>
+                </div>
+                <div class="deck-info">
+                    <div class="track-title" id="trackTitleB">No Track Loaded</div>
+                    <div class="track-time">
+                        <span id="timeCurrentB">0:00</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressB"></div>
+                        </div>
+                        <span id="timeTotalB">0:00</span>
+                    </div>
+                </div>
+                <div class="deck-controls">
+                    <div class="control-group">
+                        <label>SPEED</label>
+                        <input type="range" min="0.5" max="1.5" step="0.05" value="1" class="slider" id="speedB">
+                        <span id="speedValueB">1.0x</span>
+                    </div>
+                    <div class="control-group">
+                        <label>VOLUME</label>
+                        <input type="range" min="0" max="100" value="100" class="slider volume-slider" id="volumeB">
+                        <span id="volumeValueB">100%</span>
+                    </div>
+                </div>
+                <div id="playerB" class="youtube-player"></div>
+            </div>
+        </main>
+
+        <!-- Playlist Panel -->
+        <aside class="playlist-panel">
+            <div class="playlist-header">
+                <h2>🎵 Playlist</h2>
+                <span class="track-count" id="trackCount">0 tracks</span>
+            </div>
+            
+            <div class="add-track">
+                <input type="text" id="urlInput" placeholder="Paste YouTube URL and press Enter..." />
+                <button id="btnAddTrack" class="btn-add">+</button>
+            </div>
+
+            <div class="queue" id="queue">
+                <div class="empty-queue">
+                    <span class="empty-icon">📀</span>
+                    <p>Your playlist is empty</p>
+                    <p class="hint">Paste YouTube URLs above to add tracks</p>
+                </div>
+            </div>
+
+            <div class="keyboard-hints">
+                <h3>⌨️ Shortcuts</h3>
+                <div class="hint-grid">
+                    <kbd>Space</kbd><span>Play/Pause</span>
+                    <kbd>→</kbd><span>Next Track</span>
+                    <kbd>←</kbd><span>Previous Track</span>
+                    <kbd>C</kbd><span>Auto Crossfade</span>
+                    <kbd>A</kbd><span>Crossfade to A</span>
+                    <kbd>B</kbd><span>Crossfade to B</span>
+                    <kbd>1-4</kbd><span>Fade Duration</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Toast notifications -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
