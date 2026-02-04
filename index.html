@@ -3,223 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎧 MixTape DJ — Crossfade Player</title>
+    <title>📼 MixTape DJ — Retro Cassette Player</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Archivo+Black&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app">
-        <!-- Header -->
-        <header class="header">
-            <h1 class="logo">
-                <span class="logo-icon">💿</span>
-                MixTape DJ
-                <span class="logo-sub">Crossfade Edition</span>
-            </h1>
-            <div class="now-playing" id="nowPlaying">
-                <span class="pulse"></span>
-                <span id="nowPlayingText">Drop some tracks to get started</span>
+    <div class="boombox">
+        <!-- Boombox Top Section - Handle & Speakers -->
+        <div class="boombox-top">
+            <div class="handle"></div>
+            <div class="brand-label">
+                <span class="brand-name">MixTape DJ</span>
+                <span class="brand-model">STEREO CASSETTE PLAYER</span>
             </div>
-        </header>
+        </div>
 
-        <!-- Main DJ Interface -->
-        <main class="dj-booth">
-            <!-- Deck A -->
-            <div class="deck deck-a" id="deckA">
-                <div class="deck-header">
-                    <span class="deck-label">DECK A</span>
-                    <span class="deck-status" id="deckAStatus">IDLE</span>
+        <!-- Main Boombox Body -->
+        <div class="boombox-body">
+            <!-- Left Speaker -->
+            <div class="speaker speaker-left">
+                <div class="speaker-grille">
+                    <div class="speaker-cone"></div>
                 </div>
-                <div class="turntable">
-                    <div class="platter" id="platterA">
-                        <div class="vinyl">
-                            <div class="vinyl-label">
-                                <span class="vinyl-title" id="vinylTitleA">—</span>
+                <div class="speaker-label">L</div>
+            </div>
+
+            <!-- Center Control Panel -->
+            <div class="control-panel">
+                <!-- Now Playing Display -->
+                <div class="led-display">
+                    <div class="led-screen">
+                        <span class="led-label">NOW PLAYING</span>
+                        <div class="led-text" id="nowPlayingText">INSERT TAPE TO BEGIN</div>
+                    </div>
+                    <div class="led-indicators">
+                        <div class="indicator" id="indicatorPlay">▶ PLAY</div>
+                        <div class="indicator" id="indicatorRec">● REC</div>
+                        <div class="indicator" id="indicatorStereo">◉ STEREO</div>
+                    </div>
+                </div>
+
+                <!-- Dual Cassette Decks -->
+                <div class="cassette-decks">
+                    <!-- Deck A -->
+                    <div class="deck deck-a" id="deckA">
+                        <div class="deck-frame">
+                            <div class="deck-label">
+                                <span class="deck-letter">A</span>
+                                <span class="deck-status" id="deckAStatus">STOP</span>
                             </div>
-                            <div class="vinyl-grooves"></div>
+                            <div class="tape-compartment">
+                                <div class="cassette-window">
+                                    <div class="tape-visible">
+                                        <div class="tape-reel left" id="reelALeft">
+                                            <div class="reel-hub"></div>
+                                            <div class="reel-spoke"></div>
+                                            <div class="reel-spoke"></div>
+                                            <div class="reel-spoke"></div>
+                                        </div>
+                                        <div class="tape-strip"></div>
+                                        <div class="tape-reel right" id="reelARight">
+                                            <div class="reel-hub"></div>
+                                            <div class="reel-spoke"></div>
+                                            <div class="reel-spoke"></div>
+                                            <div class="reel-spoke"></div>
+                                        </div>
+                                    </div>
+                                    <div class="cassette-label" id="cassetteLabelA">
+                                        <div class="label-stripes">
+                                            <div class="stripe red"></div>
+                                            <div class="stripe blue"></div>
+                                            <div class="stripe yellow"></div>
+                                            <div class="stripe green"></div>
+                                        </div>
+                                        <div class="label-text">
+                                            <span class="tape-title" id="tapeTitleA">NO TAPE</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="head-assembly">
+                                    <div class="tape-head"></div>
+                                    <div class="pinch-roller"></div>
+                                    <div class="capstan"></div>
+                                </div>
+                            </div>
+                            <div class="deck-info">
+                                <div class="time-display">
+                                    <span id="timeCurrentA">0:00</span>
+                                    <div class="progress-tape">
+                                        <div class="progress-fill" id="progressA"></div>
+                                    </div>
+                                    <span id="timeTotalA">0:00</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="tonearm" id="tonearmA"></div>
+                        <div id="playerA" class="youtube-player"></div>
                     </div>
-                </div>
-                <div class="deck-info">
-                    <div class="track-title" id="trackTitleA">No Track Loaded</div>
-                    <div class="track-time">
-                        <span id="timeCurrentA">0:00</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressA"></div>
-                        </div>
-                        <span id="timeTotalA">0:00</span>
-                    </div>
-                </div>
-                <div class="deck-controls">
-                    <div class="control-group">
-                        <label>SPEED</label>
-                        <input type="range" min="0.5" max="1.5" step="0.05" value="1" class="slider" id="speedA">
-                        <span id="speedValueA">1.0x</span>
-                    </div>
-                    <div class="control-group">
-                        <label>VOLUME</label>
-                        <input type="range" min="0" max="100" value="100" class="slider volume-slider" id="volumeA">
-                        <span id="volumeValueA">100%</span>
-                    </div>
-                </div>
-                <div id="playerA" class="youtube-player"></div>
-            </div>
 
-            <!-- Center Mixer -->
-            <div class="mixer">
-                <div class="visualizer-container">
-                    <canvas id="visualizer" width="300" height="150"></canvas>
+                    <!-- Deck B -->
+                    <div class="deck deck-b" id="deckB">
+                        <div class="deck-frame">
+                            <div class="deck-label">
+                                <span class="deck-letter">B</span>
+                                <span class="deck-status" id="deckBStatus">STOP</span>
+                            </div>
+                            <div class="tape-compartment">
+                                <div class="cassette-window">
+                                    <div class="tape-visible">
+                                        <div class="tape-reel left" id="reelBLeft">
+                                            <div class="reel-hub"></div>
+                                            <div class="reel-spoke"></div>
+                                            <div class="reel-spoke"></div>
+                                            <div class="reel-spoke"></div>
+                                        </div>
+                                        <div class="tape-strip"></div>
+                                        <div class="tape-reel right" id="reelBRight">
+                                            <div class="reel-hub"></div>
+                                            <div class="reel-spoke"></div>
+                                            <div class="reel-spoke"></div>
+                                            <div class="reel-spoke"></div>
+                                        </div>
+                                    </div>
+                                    <div class="cassette-label" id="cassetteLabelB">
+                                        <div class="label-stripes">
+                                            <div class="stripe orange"></div>
+                                            <div class="stripe purple"></div>
+                                            <div class="stripe teal"></div>
+                                            <div class="stripe pink"></div>
+                                        </div>
+                                        <div class="label-text">
+                                            <span class="tape-title" id="tapeTitleB">NO TAPE</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="head-assembly">
+                                    <div class="tape-head"></div>
+                                    <div class="pinch-roller"></div>
+                                    <div class="capstan"></div>
+                                </div>
+                            </div>
+                            <div class="deck-info">
+                                <div class="time-display">
+                                    <span id="timeCurrentB">0:00</span>
+                                    <div class="progress-tape">
+                                        <div class="progress-fill" id="progressB"></div>
+                                    </div>
+                                    <span id="timeTotalB">0:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="playerB" class="youtube-player"></div>
+                    </div>
                 </div>
-                
+
+                <!-- VU Meters -->
+                <div class="vu-meters">
+                    <div class="vu-meter">
+                        <div class="vu-label">L</div>
+                        <canvas id="vuMeterL" width="120" height="30"></canvas>
+                    </div>
+                    <div class="vu-meter">
+                        <div class="vu-label">R</div>
+                        <canvas id="vuMeterR" width="120" height="30"></canvas>
+                    </div>
+                </div>
+
+                <!-- Transport Controls -->
+                <div class="transport-section">
+                    <div class="transport-controls">
+                        <button class="transport-btn btn-rew" id="btnPrev" title="Previous (←)">
+                            <span class="btn-icon">◀◀</span>
+                            <span class="btn-text">REW</span>
+                        </button>
+                        <button class="transport-btn btn-play" id="btnPlayPause" title="Play/Pause (Space)">
+                            <span class="btn-icon" id="playIcon">▶</span>
+                            <span class="btn-text">PLAY</span>
+                        </button>
+                        <button class="transport-btn btn-ff" id="btnNext" title="Next (→)">
+                            <span class="btn-icon">▶▶</span>
+                            <span class="btn-text">FF</span>
+                        </button>
+                        <button class="transport-btn btn-stop" id="btnStop" title="Stop">
+                            <span class="btn-icon">■</span>
+                            <span class="btn-text">STOP</span>
+                        </button>
+                        <button class="transport-btn btn-record" id="btnAutoCrossfade" title="Auto Crossfade (C)">
+                            <span class="btn-icon">●</span>
+                            <span class="btn-text">A→B</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Crossfade Slider -->
                 <div class="crossfade-section">
-                    <span class="cf-label">A</span>
-                    <div class="crossfade-container">
+                    <div class="crossfade-label">◀ DECK A</div>
+                    <div class="crossfade-track">
                         <input type="range" min="0" max="100" value="50" class="crossfader" id="crossfader">
-                        <div class="crossfade-markers">
+                        <div class="crossfade-notches">
                             <span></span><span></span><span></span><span></span><span></span>
                         </div>
                     </div>
-                    <span class="cf-label">B</span>
+                    <div class="crossfade-label">DECK B ▶</div>
                 </div>
 
-                <div class="mixer-controls">
-                    <button class="btn btn-play" id="btnPlayPause" title="Play/Pause (Space)">
-                        <span class="icon">▶</span>
-                    </button>
-                    <button class="btn btn-skip" id="btnPrev" title="Previous (←)">⏮</button>
-                    <button class="btn btn-skip" id="btnNext" title="Next (→)">⏭</button>
-                    <button class="btn btn-crossfade" id="btnAutoCrossfade" title="Auto Crossfade (C)">
-                        <span>⟲</span> AUTO
-                    </button>
-                </div>
-
-                <div class="fade-settings">
-                    <label>Crossfade Duration</label>
-                    <div class="fade-buttons">
-                        <button class="fade-btn" data-duration="3">3s</button>
-                        <button class="fade-btn active" data-duration="5">5s</button>
-                        <button class="fade-btn" data-duration="8">8s</button>
-                        <button class="fade-btn" data-duration="12">12s</button>
-                    </div>
-                </div>
-
-                <div class="bpm-display">
-                    <div class="bpm-box">
-                        <span class="bpm-label">BPM</span>
-                        <span class="bpm-value" id="bpmValue">---</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Deck B -->
-            <div class="deck deck-b" id="deckB">
-                <div class="deck-header">
-                    <span class="deck-label">DECK B</span>
-                    <span class="deck-status" id="deckBStatus">IDLE</span>
-                </div>
-                <div class="turntable">
-                    <div class="platter" id="platterB">
-                        <div class="vinyl">
-                            <div class="vinyl-label">
-                                <span class="vinyl-title" id="vinylTitleB">—</span>
+                <!-- Knobs Section -->
+                <div class="knobs-section">
+                    <div class="knob-group">
+                        <div class="knob-label">SPEED A</div>
+                        <div class="knob-container">
+                            <input type="range" min="0.5" max="1.5" step="0.05" value="1" class="knob-input" id="speedA">
+                            <div class="knob" id="knobSpeedA">
+                                <div class="knob-indicator"></div>
                             </div>
-                            <div class="vinyl-grooves"></div>
                         </div>
-                        <div class="tonearm" id="tonearmB"></div>
+                        <div class="knob-value" id="speedValueA">1.0x</div>
                     </div>
-                </div>
-                <div class="deck-info">
-                    <div class="track-title" id="trackTitleB">No Track Loaded</div>
-                    <div class="track-time">
-                        <span id="timeCurrentB">0:00</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressB"></div>
+                    <div class="knob-group">
+                        <div class="knob-label">VOLUME A</div>
+                        <div class="knob-container">
+                            <input type="range" min="0" max="100" value="100" class="knob-input" id="volumeA">
+                            <div class="knob" id="knobVolumeA">
+                                <div class="knob-indicator"></div>
+                            </div>
                         </div>
-                        <span id="timeTotalB">0:00</span>
+                        <div class="knob-value" id="volumeValueA">100%</div>
                     </div>
-                </div>
-                <div class="deck-controls">
-                    <div class="control-group">
-                        <label>SPEED</label>
-                        <input type="range" min="0.5" max="1.5" step="0.05" value="1" class="slider" id="speedB">
-                        <span id="speedValueB">1.0x</span>
-                    </div>
-                    <div class="control-group">
-                        <label>VOLUME</label>
-                        <input type="range" min="0" max="100" value="100" class="slider volume-slider" id="volumeB">
-                        <span id="volumeValueB">100%</span>
-                    </div>
-                </div>
-                <div id="playerB" class="youtube-player"></div>
-            </div>
-        </main>
-
-        <!-- Playlist Panel -->
-        <aside class="playlist-panel">
-            <!-- Cute Cassette Tape -->
-            <div class="cassette">
-                <div class="cassette-body">
-                    <div class="cassette-holes">
-                        <div class="screw-hole"></div>
-                        <div class="screw-hole"></div>
-                    </div>
-                    <div class="cassette-label">
-                        <div class="label-lines">
-                            <span class="label-title" id="cassetteTitle">FOR YOU</span>
+                    <div class="fade-duration">
+                        <div class="knob-label">FADE TIME</div>
+                        <div class="fade-buttons">
+                            <button class="fade-btn" data-duration="3">3s</button>
+                            <button class="fade-btn active" data-duration="5">5s</button>
+                            <button class="fade-btn" data-duration="8">8s</button>
+                            <button class="fade-btn" data-duration="12">12s</button>
                         </div>
                     </div>
-                    <div class="cassette-stripe">
-                        <div class="stripe-color red"></div>
-                        <div class="stripe-color blue"></div>
-                        <div class="stripe-color yellow"></div>
-                        <div class="stripe-color green"></div>
-                        <div class="tape-window">
-                            <div class="tape-reel left" id="reelLeft"></div>
-                            <div class="tape-reel right" id="reelRight"></div>
+                    <div class="knob-group">
+                        <div class="knob-label">VOLUME B</div>
+                        <div class="knob-container">
+                            <input type="range" min="0" max="100" value="100" class="knob-input" id="volumeB">
+                            <div class="knob" id="knobVolumeB">
+                                <div class="knob-indicator"></div>
+                            </div>
                         </div>
-                        <div class="stripe-color green"></div>
-                        <div class="stripe-color blue"></div>
+                        <div class="knob-value" id="volumeValueB">100%</div>
                     </div>
-                    <div class="cassette-bottom">
-                        <div class="cassette-notch"></div>
-                        <div class="cassette-grip"></div>
-                        <div class="cassette-notch"></div>
+                    <div class="knob-group">
+                        <div class="knob-label">SPEED B</div>
+                        <div class="knob-container">
+                            <input type="range" min="0.5" max="1.5" step="0.05" value="1" class="knob-input" id="speedB">
+                            <div class="knob" id="knobSpeedB">
+                                <div class="knob-indicator"></div>
+                            </div>
+                        </div>
+                        <div class="knob-value" id="speedValueB">1.0x</div>
                     </div>
                 </div>
             </div>
 
-            <div class="playlist-header">
-                <h2>🎵 Playlist</h2>
-                <span class="track-count" id="trackCount">0 tracks</span>
+            <!-- Right Speaker -->
+            <div class="speaker speaker-right">
+                <div class="speaker-grille">
+                    <div class="speaker-cone"></div>
+                </div>
+                <div class="speaker-label">R</div>
             </div>
-            
-            <div class="add-track">
-                <input type="text" id="urlInput" placeholder="Paste YouTube URL and press Enter..." />
-                <button id="btnAddTrack" class="btn-add">+</button>
-            </div>
+        </div>
 
-            <div class="queue" id="queue">
-                <div class="empty-queue">
-                    <span class="empty-icon">📀</span>
-                    <p>Your playlist is empty</p>
-                    <p class="hint">Paste YouTube URLs above to add tracks</p>
+        <!-- Boombox Bottom - Playlist/Tape Collection -->
+        <div class="boombox-bottom">
+            <div class="tape-collection">
+                <div class="collection-header">
+                    <span class="collection-icon">📼</span>
+                    <span class="collection-title">TAPE COLLECTION</span>
+                    <span class="tape-count" id="trackCount">0 tapes</span>
+                </div>
+                
+                <div class="add-tape">
+                    <input type="text" id="urlInput" placeholder="Paste YouTube URL to record a new tape..." />
+                    <button id="btnAddTrack" class="btn-record-new">REC</button>
+                </div>
+
+                <div class="tape-rack" id="queue">
+                    <div class="empty-rack">
+                        <span class="empty-icon">📻</span>
+                        <p>No tapes in collection</p>
+                        <p class="hint">Add YouTube URLs to build your mixtape!</p>
+                    </div>
+                </div>
+
+                <div class="shortcuts-panel">
+                    <div class="shortcuts-title">⌨️ SHORTCUTS</div>
+                    <div class="shortcuts-grid">
+                        <kbd>SPACE</kbd><span>Play/Pause</span>
+                        <kbd>→</kbd><span>Next Tape</span>
+                        <kbd>←</kbd><span>Prev Tape</span>
+                        <kbd>C</kbd><span>Auto Crossfade</span>
+                        <kbd>A</kbd><span>Fade to A</span>
+                        <kbd>B</kbd><span>Fade to B</span>
+                    </div>
                 </div>
             </div>
-
-            <div class="keyboard-hints">
-                <h3>⌨️ Shortcuts</h3>
-                <div class="hint-grid">
-                    <kbd>Space</kbd><span>Play/Pause</span>
-                    <kbd>→</kbd><span>Next Track</span>
-                    <kbd>←</kbd><span>Previous Track</span>
-                    <kbd>C</kbd><span>Auto Crossfade</span>
-                    <kbd>A</kbd><span>Crossfade to A</span>
-                    <kbd>B</kbd><span>Crossfade to B</span>
-                    <kbd>1-4</kbd><span>Fade Duration</span>
-                </div>
-            </div>
-        </aside>
+        </div>
     </div>
 
     <!-- Toast notifications -->

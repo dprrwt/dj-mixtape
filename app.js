@@ -1,6 +1,7 @@
 /**
- * 🎧 MixTape DJ — Crossfade Edition
+ * 📼 MixTape DJ — Retro Cassette Player Edition
  * A dual-deck DJ interface with smooth crossfade transitions
+ * Now with authentic boombox vibes!
  */
 
 // === YouTube IFrame API Loader ===
@@ -12,10 +13,10 @@ document.head.appendChild(tag);
 const state = {
     playlist: [],
     currentIndex: 0,
-    activeDeck: 'A', // Which deck is currently "live"
+    activeDeck: 'A',
     isPlaying: false,
     crossfadeValue: 50,
-    crossfadeDuration: 5, // seconds
+    crossfadeDuration: 5,
     autoCrossfade: false,
     isCrossfading: false,
     players: { A: null, B: null },
@@ -29,14 +30,8 @@ const els = {
     // Decks
     deckA: document.getElementById('deckA'),
     deckB: document.getElementById('deckB'),
-    platterA: document.getElementById('platterA'),
-    platterB: document.getElementById('platterB'),
-    tonearmA: document.getElementById('tonearmA'),
-    tonearmB: document.getElementById('tonearmB'),
-    trackTitleA: document.getElementById('trackTitleA'),
-    trackTitleB: document.getElementById('trackTitleB'),
-    vinylTitleA: document.getElementById('vinylTitleA'),
-    vinylTitleB: document.getElementById('vinylTitleB'),
+    tapeTitleA: document.getElementById('tapeTitleA'),
+    tapeTitleB: document.getElementById('tapeTitleB'),
     timeCurrentA: document.getElementById('timeCurrentA'),
     timeCurrentB: document.getElementById('timeCurrentB'),
     timeTotalA: document.getElementById('timeTotalA'),
@@ -45,6 +40,12 @@ const els = {
     progressB: document.getElementById('progressB'),
     deckAStatus: document.getElementById('deckAStatus'),
     deckBStatus: document.getElementById('deckBStatus'),
+    
+    // Tape reels
+    reelALeft: document.getElementById('reelALeft'),
+    reelARight: document.getElementById('reelARight'),
+    reelBLeft: document.getElementById('reelBLeft'),
+    reelBRight: document.getElementById('reelBRight'),
     
     // Controls
     speedA: document.getElementById('speedA'),
@@ -56,21 +57,36 @@ const els = {
     volumeValueA: document.getElementById('volumeValueA'),
     volumeValueB: document.getElementById('volumeValueB'),
     
+    // Knobs
+    knobSpeedA: document.getElementById('knobSpeedA'),
+    knobSpeedB: document.getElementById('knobSpeedB'),
+    knobVolumeA: document.getElementById('knobVolumeA'),
+    knobVolumeB: document.getElementById('knobVolumeB'),
+    
     // Mixer
     crossfader: document.getElementById('crossfader'),
     btnPlayPause: document.getElementById('btnPlayPause'),
+    btnStop: document.getElementById('btnStop'),
     btnPrev: document.getElementById('btnPrev'),
     btnNext: document.getElementById('btnNext'),
     btnAutoCrossfade: document.getElementById('btnAutoCrossfade'),
-    bpmValue: document.getElementById('bpmValue'),
-    visualizer: document.getElementById('visualizer'),
+    playIcon: document.getElementById('playIcon'),
+    
+    // VU Meters
+    vuMeterL: document.getElementById('vuMeterL'),
+    vuMeterR: document.getElementById('vuMeterR'),
+    
+    // LED Display
+    nowPlayingText: document.getElementById('nowPlayingText'),
+    indicatorPlay: document.getElementById('indicatorPlay'),
+    indicatorRec: document.getElementById('indicatorRec'),
+    indicatorStereo: document.getElementById('indicatorStereo'),
     
     // Playlist
     urlInput: document.getElementById('urlInput'),
     btnAddTrack: document.getElementById('btnAddTrack'),
     queue: document.getElementById('queue'),
     trackCount: document.getElementById('trackCount'),
-    nowPlayingText: document.getElementById('nowPlayingText'),
     
     // Toast
     toast: document.getElementById('toast'),
@@ -78,12 +94,11 @@ const els = {
 
 // === YouTube API Ready Callback ===
 window.onYouTubeIframeAPIReady = () => {
-    console.log('🎬 YouTube API Ready');
+    console.log('📼 YouTube API Ready');
     initPlayers();
 };
 
 function initPlayers() {
-    // Create two YouTube players for crossfade
     state.players.A = new YT.Player('playerA', {
         height: '1',
         width: '1',
@@ -122,46 +137,49 @@ function initPlayers() {
 }
 
 function onPlayerReady(deck) {
-    console.log(`🎧 Deck ${deck} ready`);
+    console.log(`📼 Deck ${deck} ready`);
     state.playerReady[deck] = true;
     applyVolume(deck);
 }
 
 function onPlayerStateChange(deck, event) {
     const statusEl = deck === 'A' ? els.deckAStatus : els.deckBStatus;
-    const platter = deck === 'A' ? els.platterA : els.platterB;
+    const deckEl = deck === 'A' ? els.deckA : els.deckB;
     
     switch (event.data) {
         case YT.PlayerState.PLAYING:
-            statusEl.textContent = 'PLAYING';
+            statusEl.textContent = 'PLAY';
             statusEl.classList.add('playing');
-            platter.classList.add('spinning');
+            deckEl.classList.add('playing');
+            if (deck === state.activeDeck) {
+                els.indicatorPlay.classList.add('active');
+            }
             break;
         case YT.PlayerState.PAUSED:
-            statusEl.textContent = 'PAUSED';
+            statusEl.textContent = 'PAUSE';
             statusEl.classList.remove('playing');
-            platter.classList.remove('spinning');
+            deckEl.classList.remove('playing');
             break;
         case YT.PlayerState.ENDED:
-            statusEl.textContent = 'ENDED';
+            statusEl.textContent = 'END';
             statusEl.classList.remove('playing');
-            platter.classList.remove('spinning');
+            deckEl.classList.remove('playing');
             if (deck === state.activeDeck && !state.isCrossfading) {
                 handleTrackEnd();
             }
             break;
         case YT.PlayerState.BUFFERING:
-            statusEl.textContent = 'LOADING';
+            statusEl.textContent = 'LOAD';
             break;
         default:
-            statusEl.textContent = 'IDLE';
+            statusEl.textContent = 'STOP';
             statusEl.classList.remove('playing');
     }
 }
 
 function onPlayerError(deck, event) {
     console.error(`❌ Deck ${deck} error:`, event.data);
-    showToast(`Error loading track on Deck ${deck}`);
+    showToast(`Error loading tape on Deck ${deck}`);
 }
 
 // === Utility Functions ===
@@ -190,7 +208,7 @@ function showToast(message) {
     setTimeout(() => els.toast.classList.remove('show'), 3000);
 }
 
-function truncateTitle(title, maxLen = 25) {
+function truncateTitle(title, maxLen = 20) {
     if (title.length <= maxLen) return title;
     return title.substring(0, maxLen - 3) + '...';
 }
@@ -203,13 +221,11 @@ async function addTrack(url) {
         return false;
     }
     
-    // Check for duplicates
     if (state.playlist.some(t => t.videoId === videoId)) {
-        showToast('Track already in playlist');
+        showToast('Tape already in collection');
         return false;
     }
     
-    // Fetch video info via noembed
     let title = `Video ${videoId}`;
     let thumbnail = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
     
@@ -227,18 +243,16 @@ async function addTrack(url) {
         title,
         thumbnail,
         url: `https://www.youtube.com/watch?v=${videoId}`,
-        bpm: Math.floor(Math.random() * 50) + 100, // Simulated BPM
+        bpm: Math.floor(Math.random() * 50) + 100,
     };
     
     state.playlist.push(track);
     renderPlaylist();
-    showToast(`Added: ${truncateTitle(title)}`);
+    showToast(`Recorded: ${truncateTitle(title)}`);
     
-    // Auto-load first track
     if (state.playlist.length === 1) {
         loadTrackToDeck('A', 0);
     }
-    // Pre-load second track to deck B
     if (state.playlist.length === 2) {
         loadTrackToDeck('B', 1);
     }
@@ -255,17 +269,17 @@ function removeTrack(index) {
 }
 
 function renderPlaylist() {
-    els.trackCount.textContent = `${state.playlist.length} track${state.playlist.length !== 1 ? 's' : ''}`;
+    els.trackCount.textContent = `${state.playlist.length} tape${state.playlist.length !== 1 ? 's' : ''}`;
     
     if (state.playlist.length === 0) {
         els.queue.innerHTML = `
-            <div class="empty-queue">
-                <span class="empty-icon">📀</span>
-                <p>Your playlist is empty</p>
-                <p class="hint">Paste YouTube URLs above to add tracks</p>
+            <div class="empty-rack">
+                <span class="empty-icon">📻</span>
+                <p>No tapes in collection</p>
+                <p class="hint">Add YouTube URLs to build your mixtape!</p>
             </div>
         `;
-        els.nowPlayingText.textContent = 'Drop some tracks to get started';
+        els.nowPlayingText.textContent = 'INSERT TAPE TO BEGIN';
         return;
     }
     
@@ -274,8 +288,8 @@ function renderPlaylist() {
     els.queue.innerHTML = state.playlist.map((track, i) => `
         <div class="queue-item ${i === state.currentIndex ? 'active' : ''} ${i === nextIndex && state.playlist.length > 1 ? 'next' : ''}" 
              data-index="${i}" onclick="playFromQueue(${i})">
-            <span class="queue-number">${i + 1}</span>
-            <img class="queue-thumb" src="${track.thumbnail}" alt="" loading="lazy">
+            <span class="queue-number">${String(i + 1).padStart(2, '0')}</span>
+            <div class="queue-tape-icon"></div>
             <div class="queue-info">
                 <div class="queue-title">${track.title}</div>
                 <div class="queue-duration">${track.bpm} BPM</div>
@@ -289,7 +303,6 @@ function playFromQueue(index) {
     if (index === state.currentIndex && state.isPlaying) return;
     
     if (state.isPlaying && index !== state.currentIndex) {
-        // Crossfade to new track
         crossfadeToTrack(index);
     } else {
         state.currentIndex = index;
@@ -307,29 +320,19 @@ function loadTrackToDeck(deck, index) {
     
     player.cueVideoById(track.videoId);
     
-    // Update UI
-    const titleEl = deck === 'A' ? els.trackTitleA : els.trackTitleB;
-    const vinylEl = deck === 'A' ? els.vinylTitleA : els.vinylTitleB;
-    
-    titleEl.textContent = track.title;
-    vinylEl.textContent = truncateTitle(track.title, 10);
+    const titleEl = deck === 'A' ? els.tapeTitleA : els.tapeTitleB;
+    titleEl.textContent = truncateTitle(track.title, 15);
     
     if (deck === state.activeDeck) {
-        els.nowPlayingText.textContent = track.title;
-        els.bpmValue.textContent = track.bpm;
-        // Update cassette label
-        const cassetteTitle = document.getElementById('cassetteTitle');
-        if (cassetteTitle) {
-            cassetteTitle.textContent = track.title.length > 12 ? track.title.substring(0, 12) + '...' : track.title;
-        }
+        els.nowPlayingText.textContent = truncateTitle(track.title, 35);
     }
     
-    console.log(`📀 Loaded "${track.title}" to Deck ${deck}`);
+    console.log(`📼 Loaded "${track.title}" to Deck ${deck}`);
 }
 
 function play() {
     if (state.playlist.length === 0) {
-        showToast('Add some tracks first!');
+        showToast('Add some tapes first!');
         return;
     }
     
@@ -337,9 +340,10 @@ function play() {
     if (player && state.playerReady[state.activeDeck]) {
         player.playVideo();
         state.isPlaying = true;
-        els.btnPlayPause.innerHTML = '<span class="icon">⏸</span>';
-        els.btnPlayPause.classList.add('playing');
-        updateCassette(true);
+        els.playIcon.textContent = '⏸';
+        els.btnPlayPause.querySelector('.btn-text').textContent = 'PAUSE';
+        els.indicatorPlay.classList.add('active');
+        els.indicatorStereo.classList.add('active');
     }
 }
 
@@ -347,30 +351,22 @@ function pause() {
     state.players.A.pauseVideo();
     state.players.B.pauseVideo();
     state.isPlaying = false;
-    els.btnPlayPause.innerHTML = '<span class="icon">▶</span>';
-    els.btnPlayPause.classList.remove('playing');
-    updateCassette(false);
+    els.playIcon.textContent = '▶';
+    els.btnPlayPause.querySelector('.btn-text').textContent = 'PLAY';
+    els.indicatorPlay.classList.remove('active');
 }
 
-// === Cassette Tape Animation ===
-function updateCassette(isPlaying) {
-    const cassette = document.querySelector('.cassette');
-    const cassetteTitle = document.getElementById('cassetteTitle');
-    
-    if (cassette) {
-        if (isPlaying) {
-            cassette.classList.add('playing');
-        } else {
-            cassette.classList.remove('playing');
-        }
-    }
-    
-    // Update cassette label with current track
-    if (cassetteTitle && state.currentIndex >= 0 && state.playlist[state.currentIndex]) {
-        const title = state.playlist[state.currentIndex].title;
-        // Truncate long titles
-        cassetteTitle.textContent = title.length > 12 ? title.substring(0, 12) + '...' : title;
-    }
+function stop() {
+    pause();
+    // Reset to beginning
+    try {
+        state.players.A.seekTo(0);
+        state.players.B.seekTo(0);
+    } catch (e) {}
+    els.deckA.classList.remove('playing');
+    els.deckB.classList.remove('playing');
+    els.deckAStatus.textContent = 'STOP';
+    els.deckBStatus.textContent = 'STOP';
 }
 
 function togglePlayPause() {
@@ -389,10 +385,8 @@ function crossfadeToTrack(newIndex) {
     const oldDeck = state.activeDeck;
     const newDeck = oldDeck === 'A' ? 'B' : 'A';
     
-    // Load new track to inactive deck
     loadTrackToDeck(newDeck, newIndex);
     
-    // Wait a moment for cue, then start crossfade
     setTimeout(() => {
         state.players[newDeck].playVideo();
         performCrossfade(oldDeck, newDeck, () => {
@@ -400,15 +394,13 @@ function crossfadeToTrack(newIndex) {
             state.currentIndex = newIndex;
             state.isCrossfading = false;
             
-            // Preload next track to old deck
             const nextIndex = (newIndex + 1) % state.playlist.length;
             if (state.playlist.length > 1) {
                 loadTrackToDeck(oldDeck, nextIndex);
             }
             
             renderPlaylist();
-            els.nowPlayingText.textContent = state.playlist[newIndex].title;
-            els.bpmValue.textContent = state.playlist[newIndex].bpm;
+            els.nowPlayingText.textContent = truncateTitle(state.playlist[newIndex].title, 35);
         });
     }, 500);
 }
@@ -423,20 +415,18 @@ function performCrossfade(fromDeck, toDeck, onComplete) {
     const toVolume = state.volumes[toDeck];
     
     showToast(`Crossfading... ${state.crossfadeDuration}s`);
+    els.indicatorRec.classList.add('active');
     
     const fadeInterval = setInterval(() => {
         step++;
         const progress = step / steps;
         
-        // Fade out old deck
         const oldVol = Math.round(fromVolume * (1 - progress));
-        // Fade in new deck
         const newVol = Math.round(toVolume * progress);
         
         state.players[fromDeck].setVolume(oldVol);
         state.players[toDeck].setVolume(newVol);
         
-        // Update crossfader UI
         const crossfadePos = fromDeck === 'A' 
             ? Math.round(progress * 100)
             : Math.round(100 - progress * 100);
@@ -445,7 +435,8 @@ function performCrossfade(fromDeck, toDeck, onComplete) {
         if (step >= steps) {
             clearInterval(fadeInterval);
             state.players[fromDeck].pauseVideo();
-            state.players[fromDeck].setVolume(fromVolume); // Reset volume
+            state.players[fromDeck].setVolume(fromVolume);
+            els.indicatorRec.classList.remove('active');
             onComplete();
         }
     }, interval);
@@ -497,7 +488,6 @@ function applyVolume(deck) {
         effectiveVolume = baseVolume * (crossfade / 100);
     }
     
-    // Only apply if not currently crossfading
     if (!state.isCrossfading) {
         state.players[deck].setVolume(Math.round(effectiveVolume));
     }
@@ -508,44 +498,73 @@ function applySpeed(deck) {
     state.players[deck].setPlaybackRate(state.speeds[deck]);
 }
 
-// === Visualizer ===
-const visualizerCtx = els.visualizer.getContext('2d');
-const barCount = 32;
-const bars = Array(barCount).fill(0);
+// === Knob Rotation ===
+function updateKnobRotation(knobEl, value, min, max) {
+    const range = max - min;
+    const normalized = (value - min) / range;
+    const rotation = -135 + (normalized * 270); // -135 to 135 degrees
+    const indicator = knobEl.querySelector('.knob-indicator');
+    if (indicator) {
+        knobEl.style.transform = `rotate(${rotation}deg)`;
+    }
+}
 
-function drawVisualizer() {
-    const width = els.visualizer.width;
-    const height = els.visualizer.height;
-    const barWidth = width / barCount - 2;
+// === VU Meters ===
+const vuCtxL = els.vuMeterL.getContext('2d');
+const vuCtxR = els.vuMeterR.getContext('2d');
+let vuLevels = { L: 0, R: 0 };
+
+function drawVUMeter(ctx, level) {
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
     
-    visualizerCtx.fillStyle = '#0a0a0f';
-    visualizerCtx.fillRect(0, 0, width, height);
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, width, height);
     
-    // Simulate audio visualization when playing
-    for (let i = 0; i < barCount; i++) {
-        if (state.isPlaying) {
-            // Simulate frequency data with some randomness
-            const target = Math.random() * 0.7 + 0.1;
-            bars[i] += (target - bars[i]) * 0.3;
+    const segments = 12;
+    const segmentWidth = (width - 20) / segments;
+    const segmentGap = 2;
+    
+    for (let i = 0; i < segments; i++) {
+        const x = 10 + i * segmentWidth;
+        const isLit = (i / segments) < level;
+        
+        let color;
+        if (i < 7) {
+            color = isLit ? '#39ff14' : '#1a3a1a';
+        } else if (i < 10) {
+            color = isLit ? '#ffbf00' : '#3a3a1a';
         } else {
-            bars[i] *= 0.95; // Decay when paused
+            color = isLit ? '#ff3131' : '#3a1a1a';
         }
         
-        const barHeight = bars[i] * height * 0.8;
-        const x = i * (barWidth + 2);
-        const y = height - barHeight;
+        ctx.fillStyle = color;
+        ctx.fillRect(x, 5, segmentWidth - segmentGap, height - 10);
         
-        // Gradient based on height
-        const gradient = visualizerCtx.createLinearGradient(x, y, x, height);
-        gradient.addColorStop(0, '#ff2d75');
-        gradient.addColorStop(0.5, '#b14fff');
-        gradient.addColorStop(1, '#00f5ff');
-        
-        visualizerCtx.fillStyle = gradient;
-        visualizerCtx.fillRect(x, y, barWidth, barHeight);
+        if (isLit) {
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 5;
+            ctx.fillRect(x, 5, segmentWidth - segmentGap, height - 10);
+            ctx.shadowBlur = 0;
+        }
+    }
+}
+
+function animateVUMeters() {
+    if (state.isPlaying) {
+        // Simulate audio levels with some randomness
+        const target = 0.4 + Math.random() * 0.4;
+        vuLevels.L += (target - vuLevels.L) * 0.3;
+        vuLevels.R += (target + (Math.random() - 0.5) * 0.1 - vuLevels.R) * 0.3;
+    } else {
+        vuLevels.L *= 0.92;
+        vuLevels.R *= 0.92;
     }
     
-    requestAnimationFrame(drawVisualizer);
+    drawVUMeter(vuCtxL, vuLevels.L);
+    drawVUMeter(vuCtxR, vuLevels.R);
+    
+    requestAnimationFrame(animateVUMeters);
 }
 
 // === Progress Updates ===
@@ -566,7 +585,6 @@ function updateProgress() {
             totalEl.textContent = formatTime(total);
             progressEl.style.width = total > 0 ? `${(current / total) * 100}%` : '0%';
             
-            // Auto-crossfade trigger (when track is near end)
             if (deck === state.activeDeck && state.autoCrossfade && state.isPlaying && !state.isCrossfading) {
                 const timeLeft = total - current;
                 if (timeLeft > 0 && timeLeft <= state.crossfadeDuration + 0.5) {
@@ -601,6 +619,7 @@ function setupEventListeners() {
     
     // Transport controls
     els.btnPlayPause.addEventListener('click', togglePlayPause);
+    els.btnStop.addEventListener('click', stop);
     els.btnNext.addEventListener('click', nextTrack);
     els.btnPrev.addEventListener('click', prevTrack);
     
@@ -617,7 +636,7 @@ function setupEventListeners() {
             document.querySelectorAll('.fade-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             state.crossfadeDuration = parseInt(btn.dataset.duration);
-            showToast(`Crossfade: ${state.crossfadeDuration}s`);
+            showToast(`Fade time: ${state.crossfadeDuration}s`);
         });
     });
     
@@ -629,35 +648,38 @@ function setupEventListeners() {
         applyVolume('B');
     });
     
-    // Speed controls
+    // Speed controls with knob rotation
     els.speedA.addEventListener('input', () => {
         state.speeds.A = parseFloat(els.speedA.value);
         els.speedValueA.textContent = state.speeds.A.toFixed(2) + 'x';
         applySpeed('A');
+        updateKnobRotation(els.knobSpeedA, state.speeds.A, 0.5, 1.5);
     });
     
     els.speedB.addEventListener('input', () => {
         state.speeds.B = parseFloat(els.speedB.value);
         els.speedValueB.textContent = state.speeds.B.toFixed(2) + 'x';
         applySpeed('B');
+        updateKnobRotation(els.knobSpeedB, state.speeds.B, 0.5, 1.5);
     });
     
-    // Volume controls
+    // Volume controls with knob rotation
     els.volumeA.addEventListener('input', () => {
         state.volumes.A = parseInt(els.volumeA.value);
         els.volumeValueA.textContent = state.volumes.A + '%';
         applyVolume('A');
+        updateKnobRotation(els.knobVolumeA, state.volumes.A, 0, 100);
     });
     
     els.volumeB.addEventListener('input', () => {
         state.volumes.B = parseInt(els.volumeB.value);
         els.volumeValueB.textContent = state.volumes.B + '%';
         applyVolume('B');
+        updateKnobRotation(els.knobVolumeB, state.volumes.B, 0, 100);
     });
     
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
-        // Ignore if typing in input
         if (e.target.tagName === 'INPUT') return;
         
         switch (e.code) {
@@ -701,19 +723,22 @@ function setupEventListeners() {
                 break;
         }
     });
+    
+    // Initialize knob rotations
+    updateKnobRotation(els.knobSpeedA, 1, 0.5, 1.5);
+    updateKnobRotation(els.knobSpeedB, 1, 0.5, 1.5);
+    updateKnobRotation(els.knobVolumeA, 100, 0, 100);
+    updateKnobRotation(els.knobVolumeB, 100, 0, 100);
 }
 
 // === Initialize ===
 function init() {
-    console.log('🎧 MixTape DJ initializing...');
+    console.log('📼 MixTape DJ - Retro Edition initializing...');
     setupEventListeners();
-    drawVisualizer();
+    animateVUMeters();
     setInterval(updateProgress, 100);
     
-    // Demo tracks (commented out - uncomment to test)
-    // addTrack('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
-    
-    showToast('🎧 MixTape DJ Ready!');
+    showToast('📼 Insert a tape to begin!');
 }
 
 // Start when DOM is ready
@@ -723,6 +748,6 @@ if (document.readyState === 'loading') {
     init();
 }
 
-// Make functions globally accessible for onclick handlers
+// Make functions globally accessible
 window.playFromQueue = playFromQueue;
 window.removeTrack = removeTrack;
