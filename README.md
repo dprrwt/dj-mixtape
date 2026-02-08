@@ -59,6 +59,13 @@ Open `http://localhost:8000` in your browser.
 3. **Crossfade** — Use the slider, keyboard shortcuts, or enable A→B auto mode
 4. **Mix** — Adjust speed/volume with the rotary knobs
 
+### Sample YouTube URLs to Try
+```
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://www.youtube.com/watch?v=fJ9rUzIMcZQ
+https://www.youtube.com/watch?v=kJQP7kiw5Fk
+```
+
 ## 🔧 How Crossfade Works
 
 The app uses two hidden YouTube iFrame players:
